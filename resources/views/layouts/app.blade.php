@@ -13,7 +13,7 @@
             <div class="flex justify-between items-center py-4">
                 <div class="flex items-center space-x-4">
                     <i class="fas fa-bus text-2xl"></i>
-                    <h1 class="text-xl font-bold">Mulia Jaya Transport</h1>
+                    <h1 class="text-xl font-bold">PO. Bus Mulia Jaya</h1>
                 </div>
                 <div class="flex items-center space-x-4">
                     @auth
@@ -40,7 +40,7 @@
         </div>
     </nav>
 
-    <main class="max-w-7xl mx-auto py-6 px-4">
+    <main class="max-w-7xl mx-auto py-6 px-4 mb-16">
         @if(session('success'))
             <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
                 {{ session('success') }}
@@ -55,5 +55,11 @@
 
         @yield('content')
     </main>
+    
+    <footer class="bg-gray-800 text-white py-4 fixed bottom-0 left-0 right-0">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p class="text-sm">Copyright © {{ date('Y') }} PO Bus Muliajaya. Developed By Agam</p>
+        </div>
+    </footer>
 </body>
 </html>

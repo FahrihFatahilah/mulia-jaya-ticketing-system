@@ -5,7 +5,7 @@
     <div class="max-w-4xl mx-auto">
         <div class="mb-8">
             <i class="fas fa-bus text-6xl text-blue-500 mb-4"></i>
-            <h1 class="text-5xl font-bold text-gray-800 mb-4">Mulia Jaya Transport</h1>
+            <h1 class="text-5xl font-bold text-gray-800 mb-4">PO. Bus Mulia Jaya</h1>
             <p class="text-xl text-gray-600 mb-8">Sistem Pembelian Tiket dan Pengiriman Barang Bus Antar Cabang</p>
         </div>
 
@@ -74,7 +74,7 @@
         </div>
 
         <div class="mt-12 text-sm text-gray-500">
-            <p>© 2024 Mulia Jaya Transport. Sistem Internal untuk Admin dan Loket.</p>
+            <p>© 2024 PO. Bus Mulia Jaya. Sistem Internal untuk Admin dan Loket.</p>
         </div>
     </div>
 </div>

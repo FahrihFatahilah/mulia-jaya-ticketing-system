@@ -149,6 +149,10 @@
                     <i class="fas fa-users text-purple-500 text-xl mr-3"></i>
                     <span class="font-medium">Kelola User</span>
                 </a>
+                <a href="{{ route('admin.passengers.index') }}" class="flex items-center p-4 bg-pink-50 rounded-lg hover:bg-pink-100 transition">
+                    <i class="fas fa-user-friends text-pink-500 text-xl mr-3"></i>
+                    <span class="font-medium">Master Penumpang</span>
+                </a>
             </div>
         </div>
     </div>

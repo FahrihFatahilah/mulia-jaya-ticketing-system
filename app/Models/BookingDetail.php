@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class BookingDetail extends Model
 {
     protected $fillable = [
-        'booking_id', 'passenger_name', 'seat_number', 'sender_name', 
+        'booking_id', 'passenger_name', 'passenger_phone', 'seat_number', 'sender_name', 
         'receiver_name', 'cargo_type', 'weight', 'price'
     ];
 

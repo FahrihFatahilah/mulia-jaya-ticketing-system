@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="max-w-2xl mx-auto">
+<div class="max-w-4xl mx-auto">
     <div class="flex justify-between items-center mb-6">
         <h2 class="text-2xl font-bold text-gray-800">Tiket</h2>
         <div class="space-x-2">
@@ -16,122 +16,111 @@
         </div>
     </div>
 
-    <div class="bg-white rounded-lg shadow-lg p-8 print:shadow-none">
+    @foreach($booking->details as $detail)
+    <div class="border-2 border-black bg-white mb-6" style="width: 100%; font-family: Arial, sans-serif; font-size: 10px;">
         <!-- Header -->
-        <div class="text-center border-b-2 border-dashed border-gray-300 pb-6 mb-6">
-            <div class="flex items-center justify-center mb-4">
-                <i class="fas fa-bus text-4xl text-blue-500 mr-3"></i>
+        <div style="display: flex; border-bottom: 2px solid black; height: 25%;">
+            <div style="flex: 1; padding: 8px; border-right: 1px solid black; display: flex; align-items: center;">
+                <div style="font-weight: bold; font-size: 10px;">
+                    TIKET PENUMPANG<br>
+                    PASSENGER TICKET<br><br>
+                    NO. {{ $booking->booking_code }}-{{ $loop->iteration }}
+                </div>
+            </div>
+            <div style="flex: 2; padding: 8px; text-align: center; display: flex; flex-direction: column; justify-content: center;">
+                <div style="width: 35px; height: 35px; background: #dc2626; border-radius: 50%; display: inline-block; margin-bottom: 6px;"></div>
+                <div style="font-weight: bold; font-size: 14px; margin-bottom: 3px;">P.O. MULIA JAYA</div>
+                <div style="font-size: 9px; line-height: 1.2;">
+                    www.muliajayadotcom<br>
+                    MELAYANI : REGULER, PATAS, PAKET<br>
+                    RUTE : {{ $booking->schedule->route->originBranch->name }} - {{ $booking->schedule->route->destinationBranch->name }}<br>
+                    LAPOR TIKET : 1 JAM SEBELUM KEBERANGKATAN<br>
+                    JAM BERANGKAT : {{ $booking->schedule->bus->departure_time->format('H:i') }}<br>
+                    NAIK DI : {{ $booking->schedule->route->originBranch->name }}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Passenger Info -->
+        <div style="padding: 8px; border-bottom: 1px solid black; height: 15%;">
+            <div style="margin-bottom: 3px;"><span style="font-weight: bold;">NAMA</span> : {{ $detail->passenger_name ?? '' }}</div>
+            <div style="margin-bottom: 3px;"><span style="font-weight: bold;">ALAMAT / TLP</span> : {{ $detail->passenger_phone ?? '' }}</div>
+            <div style="margin-bottom: 3px;"><span style="font-weight: bold;">TANGGAL</span> : {{ $booking->schedule->departure_date->format('d/m/Y') }}</div>
+        </div>
+        
+        <!-- Route Info -->
+        <div style="display: flex; border-bottom: 2px solid black; height: 20%;">
+            <div style="flex: 1; text-align: center; padding: 8px; border-right: 1px solid black; display: flex; flex-direction: column; justify-content: center;">
+                <div style="font-weight: bold;">DARI</div>
+                <div style="font-weight: bold;">FROM</div>
+                <div>{{ $booking->schedule->route->originBranch->name }}</div>
+            </div>
+            <div style="flex: 1; text-align: center; padding: 8px; border-right: 1px solid black; display: flex; flex-direction: column; justify-content: center;">
+                <div style="font-weight: bold;">TUJUAN</div>
+                <div style="font-weight: bold;">DESTINATION</div>
+                <div>{{ $booking->schedule->route->destinationBranch->name }}</div>
+            </div>
+            <div style="flex: 1; text-align: center; padding: 8px; border-right: 1px solid black; display: flex; flex-direction: column; justify-content: center;">
+                <div style="font-weight: bold;">NO. KURSI</div>
+                <div style="font-weight: bold;">SEAT NUMBER</div>
+                <div>{{ $detail->seat_number ?? '' }}</div>
+            </div>
+            <div style="flex: 1; text-align: center; padding: 8px; display: flex; flex-direction: column; justify-content: center;">
+                <div style="font-weight: bold;">NO. BUS</div>
+                <div style="font-weight: bold;">BUS NUMBER</div>
+                <div>{{ $booking->schedule->bus->name }}</div>
+            </div>
+        </div>
+        
+        <!-- Price -->
+        <div style="padding: 8px; border-bottom: 1px solid black; height: 10%; display: flex; align-items: center;">
+            <div style="font-weight: bold;">HARGA : Rp. {{ number_format($detail->price) }}</div>
+        </div>
+        
+        <!-- Bottom Section -->
+        <div style="display: flex; border-bottom: 1px solid black; height: 15%;">
+            <div style="flex: 1; padding: 8px; border-right: 1px solid black; display: flex; flex-direction: column; justify-content: center;">
+                <div style="font-weight: bold;">KELAS :</div>
+                <div style="font-weight: bold;">CLASS</div>
+                <div>{{ $booking->schedule->bus->class ?? 'EKONOMI' }}</div>
+            </div>
+            <div style="flex: 1; padding: 8px; display: flex; flex-direction: column; justify-content: center;">
+                <div style="font-weight: bold;">DIKELUARKAN OLEH:</div>
+                <div style="font-weight: bold;">ISSUED BY</div>
                 <div>
-                    <h1 class="text-2xl font-bold text-gray-800">MULIA JAYA TRANSPORT</h1>
-                    <p class="text-gray-600">Sistem Tiket Bus Antar Cabang</p>
+                    @if($booking->purchase_type === 'kantor')
+                        {{ $booking->branch->name ?? 'LOKET' }}
+                    @else
+                        {{ 'AGENT - ' . $booking->agent_code  }}
+                    @endif
                 </div>
             </div>
         </div>
-
-        <!-- Booking Info -->
-        <div class="grid grid-cols-2 gap-6 mb-6">
-            <div>
-                <h3 class="font-semibold text-gray-800 mb-3">Informasi Perjalanan</h3>
-                <div class="space-y-2 text-sm">
-                    <div class="flex justify-between">
-                        <span class="text-gray-600">Kode Booking:</span>
-                        <span class="font-semibold">{{ $booking->booking_code }}</span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span class="text-gray-600">Rute:</span>
-                        <span>{{ $booking->schedule->route->originBranch->name }} → {{ $booking->schedule->route->destinationBranch->name }}</span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span class="text-gray-600">Bus:</span>
-                        <span>{{ $booking->schedule->bus->name }}</span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span class="text-gray-600">Tanggal:</span>
-                        <span>{{ $booking->schedule->departure_date->format('d/m/Y') }}</span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span class="text-gray-600">Jam:</span>
-                        <span>{{ $booking->schedule->bus->departure_time->format('H:i') }}</span>
-                    </div>
-                </div>
-            </div>
-
-            <div>
-                <h3 class="font-semibold text-gray-800 mb-3">Detail Pembayaran</h3>
-                <div class="space-y-2 text-sm">
-                    <div class="flex justify-between">
-                        <span class="text-gray-600">Metode:</span>
-                        <span>{{ $booking->payment_method === 'cash' ? 'Tunai' : 'Non Tunai' }}</span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span class="text-gray-600">Status:</span>
-                        <span class="px-2 py-1 text-xs rounded-full {{ $booking->payment_status === 'paid' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                            {{ $booking->payment_status === 'paid' ? 'Lunas' : 'Pending' }}
-                        </span>
-                    </div>
-                    <div class="flex justify-between font-semibold">
-                        <span class="text-gray-600">Total:</span>
-                        <span>Rp {{ number_format($booking->total_amount) }}</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Details -->
-        <div class="border-t border-gray-200 pt-6">
-            <h3 class="font-semibold text-gray-800 mb-4">Detail {{ $booking->type === 'passenger' ? 'Penumpang' : 'Barang' }}</h3>
-            
-            @if($booking->type === 'passenger')
-                <div class="grid grid-cols-1 gap-4">
-                    @foreach($booking->details as $detail)
-                        <div class="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
-                            <div>
-                                <p class="font-medium">{{ $detail->passenger_name }}</p>
-                                <p class="text-sm text-gray-600">Kursi {{ $detail->seat_number }}</p>
-                            </div>
-                            <span class="font-semibold">Rp {{ number_format($detail->price) }}</span>
-                        </div>
-                    @endforeach
-                </div>
-            @else
-                <div class="space-y-4">
-                    @foreach($booking->details as $detail)
-                        <div class="p-4 bg-gray-50 rounded-lg">
-                            <div class="flex justify-between items-start mb-2">
-                                <div>
-                                    <p class="font-medium">{{ $detail->cargo_type }}</p>
-                                    <p class="text-sm text-gray-600">Berat: {{ $detail->weight }} kg</p>
-                                </div>
-                                <span class="font-semibold">Rp {{ number_format($detail->price) }}</span>
-                            </div>
-                            <div class="text-sm text-gray-600">
-                                <p>Pengirim: {{ $detail->sender_name }}</p>
-                                <p>Penerima: {{ $detail->receiver_name }}</p>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-            @endif
-        </div>
-
+        
         <!-- Footer -->
-        <div class="border-t-2 border-dashed border-gray-300 mt-8 pt-6 text-center text-sm text-gray-600">
-            <p>Terima kasih telah menggunakan layanan Mulia Jaya Transport</p>
-            <p>Simpan tiket ini sebagai bukti perjalanan</p>
-            <p class="mt-2">Dicetak pada: {{ now()->format('d/m/Y H:i') }}</p>
+        <div style="background: #f8f8f8; padding: 8px; text-align: center; color: #dc2626; font-weight: bold; height: 15%; display: flex; align-items: center; justify-content: center;">
+            <div>
+                KESELAMATAN DAN KENYAMANAN ANDA<br>
+                ADALAH PRIORITAS KAMI
+            </div>
         </div>
     </div>
+    @endforeach
 </div>
 
 <style>
 @media print {
+    @page {
+        size: 148mm 105mm;
+        margin: 5mm;
+    }
     body * {
         visibility: hidden;
     }
-    .max-w-2xl, .max-w-2xl * {
+    .max-w-4xl, .max-w-4xl * {
         visibility: visible;
     }
-    .max-w-2xl {
+    .max-w-4xl {
         position: absolute;
         left: 0;
         top: 0;
@@ -139,6 +128,15 @@
     }
     .flex.justify-between.items-center.mb-6 {
         display: none !important;
+    }
+    div[style*="width: 100%"] {
+        width: 138mm !important;
+        height: 95mm !important;
+        margin: 0;
+        page-break-after: always;
+    }
+    div[style*="width: 100%"]:last-child {
+        page-break-after: avoid;
     }
 }
 </style>

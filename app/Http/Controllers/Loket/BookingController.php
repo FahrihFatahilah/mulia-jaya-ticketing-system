@@ -10,7 +10,7 @@ use App\Models\Schedule;
 use App\Models\Bus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Inertia\Inertia;
+use App\Models\Passenger;
 use Carbon\Carbon;
 
 class BookingController extends Controller
@@ -85,9 +85,18 @@ class BookingController extends Controller
 
             // Create booking details
             foreach ($request->details as $detail) {
+                // Create passenger master data only if phone doesn't exist
+                if (isset($detail['passenger_phone']) && isset($detail['passenger_name'])) {
+                    Passenger::firstOrCreate(
+                        ['phone' => $detail['passenger_phone']],
+                        ['name' => $detail['passenger_name']]
+                    );
+                }
+                
                 BookingDetail::create([
                     'booking_id' => $booking->id,
                     'passenger_name' => $detail['passenger_name'] ?? null,
+                    'passenger_phone' => $detail['passenger_phone'] ?? null,
                     'seat_number' => $detail['seat_number'] ?? null,
                     'sender_name' => $detail['sender_name'] ?? null,
                     'receiver_name' => $detail['receiver_name'] ?? null,
@@ -204,6 +213,24 @@ class BookingController extends Controller
 
         return redirect()->route('loket.bookings.index')
             ->with('success', 'Pemesanan berhasil dibatalkan.');
+    }
+
+    public function getBusesByRoute(Request $request)
+    {
+        $buses = Bus::where('is_active', true)
+            ->where('route_id', $request->route_id)
+            ->get(['id', 'name', 'code', 'departure_time', 'seat_count'])
+            ->map(function($bus) {
+                return [
+                    'id' => $bus->id,
+                    'name' => $bus->name,
+                    'code' => $bus->code,
+                    'departure_time' => $bus->departure_time->format('H:i'),
+                    'seat_count' => $bus->seat_count
+                ];
+            });
+            
+        return response()->json($buses);
     }
 
     public function show(Booking $booking)

@@ -37,6 +37,21 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
             <div>
+                <label for="route_id" class="block text-sm font-medium text-gray-700 mb-2">Rute</label>
+                <select name="route_id" id="route_id" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 @error('route_id') border-red-500 @enderror" required>
+                    <option value="">Pilih Rute</option>
+                    @foreach(\App\Models\Route::with(['originBranch', 'destinationBranch'])->where('is_active', true)->get() as $route)
+                        <option value="{{ $route->id }}" {{ old('route_id') == $route->id ? 'selected' : '' }}>
+                            {{ $route->route_name }}
+                        </option>
+                    @endforeach
+                </select>
+                @error('route_id')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div>
                 <label for="seat_count" class="block text-sm font-medium text-gray-700 mb-2">Jumlah Kursi</label>
                 <input type="number" name="seat_count" id="seat_count" value="{{ old('seat_count', 32) }}" 
                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 @error('seat_count') border-red-500 @enderror"
@@ -45,6 +60,9 @@
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                 @enderror
             </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
 
             <div>
                 <label for="departure_time" class="block text-sm font-medium text-gray-700 mb-2">Jam Keberangkatan</label>

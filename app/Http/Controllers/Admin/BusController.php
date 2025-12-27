@@ -10,7 +10,7 @@ class BusController extends Controller
 {
     public function index()
     {
-        $buses = Bus::orderBy('code')->get();
+        $buses = Bus::with('route.originBranch', 'route.destinationBranch')->orderBy('code')->get();
         
         return view('admin.buses.index', compact('buses'));
     }

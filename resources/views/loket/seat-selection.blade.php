@@ -200,11 +200,19 @@ document.addEventListener('DOMContentLoaded', function() {
             div.innerHTML = `
                 <h4 class="font-medium text-gray-800 mb-3">Penumpang Kursi ${seat}</h4>
                 <input type="hidden" name="details[${index}][seat_number]" value="${seat}">
-                <div>
-                    <label for="passenger_name" class="block text-sm font-medium text-gray-700 mb-1">Nama Penumpang</label>
-                    <input type="text" name="details[${index}][passenger_name]" 
-                           class="w-full px-3 py-2 border border-gray-300 rounded-md" 
-                           placeholder="Nama lengkap penumpang" required>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="passenger_name" class="block text-sm font-medium text-gray-700 mb-1">Nama Penumpang</label>
+                        <input type="text" name="details[${index}][passenger_name]" 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md" 
+                               placeholder="Nama lengkap penumpang" required>
+                    </div>
+                    <div>
+                        <label for="passenger_phone" class="block text-sm font-medium text-gray-700 mb-1">Nomor HP</label>
+                        <input type="tel" name="details[${index}][passenger_phone]" 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md" 
+                               placeholder="08xxxxxxxxxx" required>
+                    </div>
                 </div>
             `;
             passengerDetailsDiv.appendChild(div);

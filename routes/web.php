@@ -6,7 +6,7 @@ use App\Http\Controllers\Admin\BusController;
 use App\Http\Controllers\Admin\RouteController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\ReportController;
-use App\Http\Controllers\Admin\CashFlowController;
+use App\Http\Controllers\Admin\PassengerController;
 use App\Http\Controllers\Loket\BookingController;
 use Illuminate\Support\Facades\Route;
 use App\Models\Branch;
@@ -96,6 +96,9 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::resource('users', UserController::class);
     Route::resource('cash-flows', CashFlowController::class);
     
+    Route::get('/passengers', [PassengerController::class, 'index'])->name('passengers.index');
+    Route::get('/passengers/{phone}/history', [PassengerController::class, 'history'])->name('passengers.history');
+    
     Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
     Route::get('/reports/daily-bookkeeping', [ReportController::class, 'dailyBookkeeping'])->name('reports.daily-bookkeeping');
     Route::get('/reports/export', [ReportController::class, 'export'])->name('reports.export');
@@ -125,6 +128,7 @@ Route::middleware(['auth'])->prefix('loket')->name('loket.')->group(function () 
             ->get();
         return view('loket.dashboard', compact('stats', 'recent_bookings'));
     })->name('dashboard');
+   
     
     Route::middleware('role:loket')->group(function () {
         Route::resource('bookings', BookingController::class);

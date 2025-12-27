@@ -31,7 +31,7 @@
                 <label for="departure_date" class="block text-sm font-medium text-gray-700 mb-2">Tanggal Keberangkatan</label>
                 <input type="date" name="departure_date" id="departure_date" 
                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                       min="{{ date('Y-m-d') }}" required>
+                       min="{{ date('Y-m-d') }}" onchange="validateDate(this)" required>
             </div>
         </div>
 
@@ -39,12 +39,7 @@
             <div>
                 <label for="bus_id" class="block text-sm font-medium text-gray-700 mb-2">Pilih Bus</label>
                 <select name="bus_id" id="bus_id" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-                    <option value="">Pilih Bus</option>
-                    @foreach(\App\Models\Bus::where('is_active', true)->get() as $bus)
-                        <option value="{{ $bus->id }}" data-time="{{ $bus->departure_time->format('H:i') }}" data-seats="{{ $bus->seat_count }}">
-                            {{ $bus->name }} ({{ $bus->code }}) - {{ $bus->departure_time->format('H:i') }}
-                        </option>
-                    @endforeach
+                    <option value="">Pilih rute terlebih dahulu</option>
                 </select>
                 <p class="text-xs text-gray-500 mt-1">Setiap bus memiliki jam keberangkatan tetap</p>
             </div>
@@ -246,6 +241,33 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Also check when route or date changes
     document.getElementById('route_id').addEventListener('change', function() {
+        const routeId = this.value;
+        const busSelect = document.getElementById('bus_id');
+        
+        // Clear current bus options
+        busSelect.innerHTML = '<option value="">Pilih Bus</option>';
+        
+        if (routeId) {
+            // Fetch buses for selected route
+            fetch(`/loket/get-buses-by-route?route_id=${routeId}`)
+                .then(response => response.json())
+                .then(buses => {
+                    buses.forEach(bus => {
+                        const option = document.createElement('option');
+                        option.value = bus.id;
+                        option.dataset.time = bus.departure_time;
+                        option.dataset.seats = bus.seat_count;
+                        option.textContent = `${bus.name} (${bus.code}) - ${bus.departure_time}`;
+                        busSelect.appendChild(option);
+                    });
+                })
+                .catch(() => {
+                    console.error('Failed to load buses for route');
+                });
+        } else {
+            busSelect.innerHTML = '<option value="">Pilih rute terlebih dahulu</option>';
+        }
+        
         if (busSelect.value) busSelect.dispatchEvent(new Event('change'));
     });
     
@@ -311,6 +333,35 @@ document.addEventListener('DOMContentLoaded', function() {
             dateInput.value = departureDate;
             scheduleForm.appendChild(dateInput);
             
+            const priceInput = document.createElement('input');
+            priceInput.type = 'hidden';
+            priceInput.name = 'ticket_price';
+            priceInput.value = formData.get('ticket_price');
+            scheduleForm.appendChild(priceInput);
+            
+            const purchaseInput = document.createElement('input');
+            purchaseInput.type = 'hidden';
+            purchaseInput.name = 'purchase_type';
+            purchaseInput.value = formData.get('purchase_type');
+            scheduleForm.appendChild(purchaseInput);
+            
+            const agentInput = document.createElement('input');
+            agentInput.type = 'hidden';
+            agentInput.name = 'agent_code';
+            agentInput.value = formData.get('agent_code') || '';
+            scheduleForm.appendChild(agentInput);
+            
+            const paymentInput = document.createElement('input');
+            paymentInput.type = 'hidden';
+            paymentInput.name = 'payment_method';
+            paymentInput.value = formData.get('payment_method');
+            scheduleForm.appendChild(paymentInput);
+            
+            const descInput = document.createElement('input');
+            descInput.type = 'hidden';
+            descInput.name = 'payment_description';
+            descInput.value = formData.get('payment_description') || '';
+            
             document.body.appendChild(scheduleForm);
             scheduleForm.submit();
         } else if (type === 'cargo') {
@@ -356,5 +407,13 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+function validateDate(input) {
+    const today = new Date().toISOString().split('T')[0];
+    if (input.value < today) {
+        input.value = today;
+        alert('Tidak dapat memilih tanggal sebelum hari ini');
+    }
+}
 </script>
 @endsection

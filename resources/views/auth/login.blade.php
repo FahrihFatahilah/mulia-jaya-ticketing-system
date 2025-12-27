@@ -14,7 +14,7 @@
                 <div class="w-20 h-20 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
                     <i class="fas fa-bus text-white text-3xl"></i>
                 </div>
-                <h1 class="text-2xl font-bold text-gray-800">Mulia Jaya Transport</h1>
+                <h1 class="text-2xl font-bold text-gray-800">PO. Bus Mulia Jaya</h1>
                 <p class="text-gray-600 mt-2">Sistem Internal - Login</p>
             </div>
 
@@ -86,7 +86,7 @@
         </div>
 
         <div class="text-center mt-6 text-white text-sm">
-            <p>© 2024 Mulia Jaya Transport. Sistem Internal.</p>
+            <p>© 2024 PO. Bus Mulia Jaya. Sistem Internal.</p>
         </div>
     </div>
 </body>

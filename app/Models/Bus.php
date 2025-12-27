@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Bus extends Model
 {
-    protected $fillable = ['code', 'name', 'seat_count', 'departure_time', 'is_active'];
+    protected $fillable = ['code', 'name', 'seat_count', 'departure_time', 'route_id', 'is_active'];
 
     protected $casts = [
         'is_active' => 'boolean',
@@ -18,5 +18,10 @@ class Bus extends Model
     public function schedules(): HasMany
     {
         return $this->hasMany(Schedule::class);
+    }
+    
+    public function route()
+    {
+        return $this->belongsTo(Route::class);
     }
 }
