@@ -113,7 +113,7 @@ class ReportController extends Controller
             })
             ->when($request->filled('office'), function($q) use ($request) {
                 $q->where('office', $request->office);
-            })->count(),
+            })->withCount('details')->get()->sum('details_count'),
             'total_income' => $totalIncome,
             'total_expenses' => $totalExpenses,
             'net_income' => $netIncome,
@@ -123,6 +123,22 @@ class ReportController extends Controller
         $buses = \App\Models\Bus::all();
         
         return view('admin.reports.index', compact('reports', 'summary', 'routes', 'buses'));
+    }
+
+    public function showBooking($id)
+    {
+        $booking = Booking::with(['schedule.route.originBranch', 'schedule.route.destinationBranch', 'schedule.bus', 'details'])
+            ->findOrFail($id);
+        
+        return view('admin.reports.booking-detail', compact('booking'));
+    }
+
+    public function showCashFlow($id)
+    {
+        $cashFlow = \App\Models\CashFlow::with(['schedule.route.originBranch', 'schedule.route.destinationBranch', 'schedule.bus'])
+            ->findOrFail($id);
+        
+        return view('admin.reports.cashflow-detail', compact('cashFlow'));
     }
 
     public function dailyBookkeeping(Request $request)

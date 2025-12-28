@@ -52,7 +52,7 @@
 </div>
 
 <!-- Statistik Penjualan -->
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6 mb-8">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
     <div class="bg-white rounded-lg shadow p-6">
         <div class="flex items-center">
             <div class="p-3 rounded-full bg-indigo-500 text-white">
@@ -175,25 +175,47 @@
         </div>
     </div>
 
-    <!-- Monthly Report Chart -->
+    <!-- Top Routes -->
     <div class="bg-white rounded-lg shadow">
         <div class="p-6 border-b">
-            <h3 class="text-lg font-semibold">Laporan Bulanan {{ date('Y') }}</h3>
+            <h3 class="text-lg font-semibold">Rute Favorit</h3>
         </div>
-        <div class="p-6">
+        <div class="p-4">
             <div class="space-y-3">
-                @foreach($monthlyReport as $month)
-                    <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                @foreach($topRoutes as $route)
+                    <div class="flex justify-between items-center p-3 bg-gray-50 rounded">
                         <div>
-                            <span class="font-medium text-gray-800">{{ $month['month'] }}</span>
-                            <p class="text-sm text-gray-600">{{ $month['bookings'] }} booking</p>
+                            <p class="font-medium text-sm">{{ $route['route'] }}</p>
+                            <p class="text-xs text-gray-600">{{ $route['bookings'] }} booking</p>
                         </div>
                         <div class="text-right">
-                            <p class="font-semibold text-green-600">Rp {{ number_format($month['income']) }}</p>
+                            <p class="font-semibold text-green-600 text-xs">Rp {{ number_format($route['income']) }}</p>
                         </div>
                     </div>
                 @endforeach
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- Monthly Report Chart -->
+<div class="mt-8 bg-white rounded-lg shadow">
+    <div class="p-6 border-b">
+        <h3 class="text-lg font-semibold">Laporan Bulanan {{ date('Y') }}</h3>
+    </div>
+    <div class="p-6">
+        <div class="space-y-4">
+            @foreach($monthlyReport as $month)
+                <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                    <div>
+                        <span class="font-medium text-gray-800">{{ $month['month'] }}</span>
+                        <span class="text-sm text-gray-600 ml-2">{{ $month['bookings'] }} booking</span>
+                    </div>
+                    <div class="text-right">
+                        <p class="font-semibold text-blue-600">Rp {{ number_format($month['income']) }}</p>
+                    </div>
+                </div>
+            @endforeach
         </div>
     </div>
 </div>

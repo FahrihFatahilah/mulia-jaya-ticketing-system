@@ -137,6 +137,7 @@
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tipe</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jumlah</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
                 </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
@@ -187,10 +188,21 @@
                             </span>
                         @endif
                     </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        @if($item->transaction_type === 'booking')
+                            <a href="{{ route('admin.reports.booking', $item->id) }}" class="text-blue-600 hover:text-blue-800">
+                                <i class="fas fa-eye mr-1"></i>Detail
+                            </a>
+                        @else
+                            <a href="{{ route('admin.reports.cashflow', $item->id) }}" class="text-blue-600 hover:text-blue-800">
+                                <i class="fas fa-eye mr-1"></i>Detail
+                            </a>
+                        @endif
+                    </td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="7" class="px-6 py-4 text-center text-gray-500">Tidak ada data laporan</td>
+                    <td colspan="8" class="px-6 py-4 text-center text-gray-500">Tidak ada data laporan</td>
                 </tr>
                 @endforelse
             </tbody>
