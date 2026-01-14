@@ -58,16 +58,24 @@ class BookingController extends Controller
             $paymentMethod = $request->payment_method ?? session('payment_method', 'cash');
             $paymentDescription = $request->payment_description ?? session('payment_description');
 
+            // Clean and convert ticket price - remove dots and convert to integer
+            if (is_string($ticketPrice)) {
+                $ticketPrice = (int) str_replace(['.', ','], '', $ticketPrice);
+            } else {
+                $ticketPrice = (int) $ticketPrice;
+            }
+
             // Debug: Log the values
             \Log::info('Booking store values:', [
-                'ticket_price' => $ticketPrice,
+                'original_ticket_price' => $request->ticket_price,
+                'processed_ticket_price' => $ticketPrice,
                 'details_count' => count($request->details),
                 'session_ticket_price' => session('ticket_price'),
                 'request_ticket_price' => $request->ticket_price
             ]);
 
-            // Calculate total amount (ticket price * number of passengers)
-            $ticketPricePerPerson = (int) $ticketPrice;
+            // Calculate total amount (ticket price * number of passengers/items)
+            $ticketPricePerPerson = $ticketPrice;
             $totalAmount = $ticketPricePerPerson * count($request->details);
 
             // Create booking

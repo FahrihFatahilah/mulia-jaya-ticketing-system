@@ -31,7 +31,7 @@
                 <label for="departure_date" class="block text-sm font-medium text-gray-700 mb-2">Tanggal Keberangkatan</label>
                 <input type="date" name="departure_date" id="departure_date" 
                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                       min="{{ date('Y-m-d') }}" onchange="validateDate(this)" required>
+                       required>
             </div>
         </div>
 
@@ -404,16 +404,15 @@ document.addEventListener('DOMContentLoaded', function() {
             hiddenInput5.name = 'details[0][price]';
             hiddenInput5.value = document.getElementById('ticket_price').value.replace(/\./g, '');
             this.appendChild(hiddenInput5);
+            
+            // Also add ticket_price for controller processing
+            const ticketPriceHidden = document.createElement('input');
+            ticketPriceHidden.type = 'hidden';
+            ticketPriceHidden.name = 'ticket_price';
+            ticketPriceHidden.value = document.getElementById('ticket_price').value.replace(/\./g, '');
+            this.appendChild(ticketPriceHidden);
         }
     });
 });
-
-function validateDate(input) {
-    const today = new Date().toISOString().split('T')[0];
-    if (input.value < today) {
-        input.value = today;
-        alert('Tidak dapat memilih tanggal sebelum hari ini');
-    }
-}
 </script>
 @endsection

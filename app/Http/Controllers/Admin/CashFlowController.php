@@ -42,23 +42,22 @@ class CashFlowController extends Controller
 
         // Calculate balance
         if ($request->type === 'office_expense') {
-            // Office expenses don't relate to specific schedule
-            $lastCashFlow = CashFlow::whereNull('schedule_id')
-                ->where('type', 'office_expense')
-                ->orderBy('created_at', 'desc')
-                ->first();
+            // Get balance from total income minus all office expenses
+            $totalIncome = CashFlow::where('type', 'income')->sum('amount');
+            $totalOfficeExpense = CashFlow::where('type', 'office_expense')->sum('amount');
+            $balance = $totalIncome - $totalOfficeExpense - $amount;
         } else {
             $lastCashFlow = CashFlow::where('schedule_id', $request->schedule_id)
                 ->orderBy('created_at', 'desc')
                 ->first();
-        }
             
-        $balance = $lastCashFlow ? $lastCashFlow->balance : 0;
-        
-        if ($request->type === 'expense' || $request->type === 'office_expense') {
-            $balance -= $amount;
-        } else {
-            $balance += $amount;
+            $balance = $lastCashFlow ? $lastCashFlow->balance : 0;
+            
+            if ($request->type === 'expense') {
+                $balance -= $amount;
+            } else {
+                $balance += $amount;
+            }
         }
 
         CashFlow::create([

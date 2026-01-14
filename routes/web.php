@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\PassengerController;
 use App\Http\Controllers\Admin\CashFlowController;
+use App\Http\Controllers\Admin\BookingController as AdminBookingController;
 use App\Http\Controllers\Loket\BookingController;
 use Illuminate\Support\Facades\Route;
 use App\Models\Branch;
@@ -114,6 +115,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::resource('routes', RouteController::class);
     Route::resource('users', UserController::class);
     Route::resource('cash-flows', CashFlowController::class);
+    Route::resource('bookings', AdminBookingController::class)->only(['index', 'edit', 'update', 'destroy']);
     
     Route::get('/passengers', [PassengerController::class, 'index'])->name('passengers.index');
     Route::get('/passengers/{phone}/history', [PassengerController::class, 'history'])->name('passengers.history');

@@ -153,6 +153,10 @@
                     <i class="fas fa-user-friends text-pink-500 text-xl mr-3"></i>
                     <span class="font-medium">Master Penumpang</span>
                 </a>
+                <a href="{{ route('admin.bookings.index') }}" class="flex items-center p-4 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition">
+                    <i class="fas fa-ticket-alt text-indigo-500 text-xl mr-3"></i>
+                    <span class="font-medium">Kelola Bookings</span>
+                </a>
             </div>
         </div>
     </div>
