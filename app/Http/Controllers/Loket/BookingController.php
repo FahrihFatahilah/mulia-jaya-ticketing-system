@@ -175,12 +175,6 @@ class BookingController extends Controller
 
     public function seatSelection(Schedule $schedule)
     {
-        // Check if required session data exists
-        if (!session('ticket_price') || !session('purchase_type') || !session('payment_method')) {
-            return redirect()->route('loket.bookings.create')
-                ->with('error', 'Data pemesanan tidak lengkap. Silakan isi form kembali.');
-        }
-
         $schedule->load(['route.originBranch', 'route.destinationBranch', 'bus']);
         $occupiedSeats = $schedule->occupied_seats;
         

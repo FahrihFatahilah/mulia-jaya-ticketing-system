@@ -41,23 +41,14 @@ class CashFlowController extends Controller
         $amount = (int) str_replace('.', '', $request->amount);
 
         // Calculate balance
-        if ($request->type === 'office_expense') {
-            // Get balance from total income minus all office expenses
-            $totalIncome = CashFlow::where('type', 'income')->sum('amount');
-            $totalOfficeExpense = CashFlow::where('type', 'office_expense')->sum('amount');
-            $balance = $totalIncome - $totalOfficeExpense - $amount;
+        $lastBalance = CashFlow::where('office', $request->office)
+            ->orderBy('created_at', 'desc')
+            ->value('balance') ?? 0;
+            
+        if ($request->type === 'expense' || $request->type === 'office_expense') {
+            $balance = $lastBalance - $amount;
         } else {
-            $lastCashFlow = CashFlow::where('schedule_id', $request->schedule_id)
-                ->orderBy('created_at', 'desc')
-                ->first();
-            
-            $balance = $lastCashFlow ? $lastCashFlow->balance : 0;
-            
-            if ($request->type === 'expense') {
-                $balance -= $amount;
-            } else {
-                $balance += $amount;
-            }
+            $balance = $lastBalance + $amount;
         }
 
         CashFlow::create([
@@ -94,10 +85,11 @@ class CashFlowController extends Controller
     {
         $request->validate([
             'description' => 'required|string',
-            'amount' => 'required|numeric',
+            'amount' => 'required|string',
         ]);
 
-        $cashFlow->update($request->only(['description', 'amount']));
+        $amount = (int) str_replace('.', '', $request->amount);
+        $cashFlow->update(['description' => $request->description, 'amount' => $amount]);
 
         return redirect()->route('admin.cash-flows.index')
             ->with('success', 'Cash flow berhasil diperbarui');
