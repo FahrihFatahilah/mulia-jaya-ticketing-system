@@ -37,7 +37,7 @@ class BookingController extends Controller
     {
         $request->validate([
             'route_id' => 'required|exists:routes,id',
-            'departure_date' => 'required|date|after_or_equal:today',
+            'departure_date' => 'required|date',
             'bus_id' => 'required|exists:buses,id',
             'type' => 'required|in:passenger,cargo',
             'details' => 'required|array|min:1',
@@ -152,7 +152,7 @@ class BookingController extends Controller
         $request->validate([
             'route_id' => 'required|exists:routes,id',
             'bus_id' => 'required|exists:buses,id',
-            'departure_date' => 'required|date|after_or_equal:today',
+            'departure_date' => 'required|date',
         ]);
 
         $schedule = Schedule::firstOrCreate([
