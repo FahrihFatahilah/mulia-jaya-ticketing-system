@@ -19,6 +19,7 @@ echo "⏳ Waiting for container..."
 sleep 5
 
 # Run artisan commands
+docker compose exec app php artisan key:generate --force
 docker compose exec app php artisan migrate --force
 docker compose exec app php artisan config:cache
 docker compose exec app php artisan route:cache
