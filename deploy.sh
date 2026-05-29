@@ -21,6 +21,16 @@ sleep 5
 # Run artisan commands
 docker compose exec app php artisan key:generate --force
 docker compose exec app php artisan migrate --force
+
+# Seed hanya sekali
+if [ ! -f .seeded ]; then
+    echo "🌱 Running seeder..."
+    docker compose exec app php artisan db:seed --force
+    touch .seeded
+    echo "✅ Seeder selesai!"
+else
+    echo "⏭️  Seeder dilewati (sudah pernah dijalankan)"
+fi
 docker compose exec app php artisan config:cache
 docker compose exec app php artisan route:cache
 docker compose exec app php artisan view:cache
