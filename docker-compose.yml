@@ -8,7 +8,6 @@ services:
     environment:
       APP_NAME: "Po Mulia Jaya"
       APP_ENV: production
-      APP_KEY: ${APP_KEY}
       APP_DEBUG: false
       APP_URL: https://tiket.ffatahilah.my.id
       DB_CONNECTION: mysql
@@ -21,6 +20,7 @@ services:
       CACHE_STORE: database
       QUEUE_CONNECTION: database
     volumes:
+      - ./.env:/var/www/html/.env
       - muliajaya_storage:/var/www/html/storage
       - muliajaya_logs:/var/www/html/storage/logs
     extra_hosts:
