@@ -21,8 +21,8 @@ services:
       CACHE_STORE: database
       QUEUE_CONNECTION: database
     volumes:
-      - ./storage/logs:/var/www/html/storage/logs
-      - ./storage/app:/var/www/html/storage/app
+      - muliajaya_storage:/var/www/html/storage
+      - muliajaya_logs:/var/www/html/storage/logs
     extra_hosts:
       - "host.docker.internal:host-gateway"
     labels:
@@ -38,3 +38,7 @@ services:
 networks:
   proxy:
     external: true
+
+volumes:
+  muliajaya_storage:
+  muliajaya_logs:
