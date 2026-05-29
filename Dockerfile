@@ -25,7 +25,7 @@ RUN composer install --no-dev --no-scripts --no-autoloader --prefer-dist
 COPY . .
 
 # Build assets
-RUN npm ci && npm run build && rm -rf node_modules
+RUN npm install && npm run build && rm -rf node_modules
 
 # Finish composer
 RUN composer dump-autoload --optimize --no-dev
