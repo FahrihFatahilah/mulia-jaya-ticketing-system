@@ -1,0 +1,40 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: muliajaya-app
+    restart: unless-stopped
+    environment:
+      APP_NAME: "Po Mulia Jaya"
+      APP_ENV: production
+      APP_KEY: ${APP_KEY}
+      APP_DEBUG: false
+      APP_URL: https://tiket.ffatahilah.my.id
+      DB_CONNECTION: mysql
+      DB_HOST: localhost
+      DB_PORT: 3306
+      DB_DATABASE: db_tiket
+      DB_USERNAME: ffatahilah
+      DB_PASSWORD: OmbaInam#121221
+      SESSION_DRIVER: database
+      CACHE_STORE: database
+      QUEUE_CONNECTION: database
+    volumes:
+      - ./storage/logs:/var/www/html/storage/logs
+      - ./storage/app:/var/www/html/storage/app
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.muliajaya.rule=Host(`tiket.ffatahilah.my.id`)"
+      - "traefik.http.routers.muliajaya.entrypoints=websecure"
+      - "traefik.http.routers.muliajaya.tls=true"
+      - "traefik.http.routers.muliajaya.tls.certresolver=letsencrypt"
+      - "traefik.http.services.muliajaya.loadbalancer.server.port=80"
+    networks:
+      - proxy
+
+networks:
+  proxy:
+    external: true
